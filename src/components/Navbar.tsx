@@ -1,9 +1,20 @@
 "use client";
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import Link from "next/link";
 
 const Navbar = () => {
+  const { user, isLoaded, isSignedIn } = useUser();
+  const role = user?.publicMetadata.role;
+  console.log(user);
+
   const links = (
     <>
       <li>
@@ -45,11 +56,33 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">CodeTutor</a>
+        <Link href={"/"} className="text-xl font-semibold">
+          CodeTuror
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
+
+      <div>
+        {isSignedIn ? (
+          isSignedIn ? (
+            <>
+              {role === "user" && <Link href={"user-dashboard"}>User</Link>}
+              {role === "admin" && <Link href={"admin-dashboard"}>Admin</Link>}
+              {role === "educator" && (
+                <Link href={"educator-dashboard"}>Educator</Link>
+              )}
+            </>
+          ) : (
+            <p>Hello</p>
+          )
+        ) : (
+          <p>Register</p>
+        )}
+      </div>
+
+      {/* auth buttons right  */}
       <div className="navbar-end">
         <SignedOut>
           <SignInButton mode="modal">
@@ -59,9 +92,12 @@ const Navbar = () => {
 
         <SignedIn>
           <UserButton />
-          <Link className="ml-3" href={"/user-profile"}>
+          <Link className="mx-3" href={"/user-profile"}>
             Profile
           </Link>
+          <SignOutButton>
+            <button className="btn btn-error">Sign Out</button>
+          </SignOutButton>
         </SignedIn>
       </div>
     </div>
