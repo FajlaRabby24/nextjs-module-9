@@ -59,6 +59,9 @@ const Navbar = () => {
 
         <SignedIn>
           <UserButton />
+          <Link className="ml-3" href={"/user-profile"}>
+            Profile
+          </Link>
         </SignedIn>
       </div>
     </div>
